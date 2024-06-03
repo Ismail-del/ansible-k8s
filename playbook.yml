@@ -1,11 +1,18 @@
+- name: install haproxy
+  hosts: k8s-lb
+  become: true
+  roles:
+  - roles/haproxy
+
 - name: install kubernetes cluster
-  hosts: all
+  hosts: k8s-masters,k8s-workers
   become: true
   serial: 1
   roles:
   - roles/kubernetes
-  vars:
-    kubeadm_init_master: kubm1
-    kubeadm_master_group_name: k8s-masters
-    kubeadm_worker_group_name: k8s-workers
 
+- name: ingress controller
+  hosts: kubm1
+  become: true
+  roles:
+  - addons
